@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
+import { ThrottlerModule } from '@nestjs/throttler'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { AuthController } from './auth.controller'
@@ -18,6 +19,10 @@ import { JwtStrategy } from './strategies/jwt.strategy'
             signOptions: { expiresIn: '7d' },
         }),
         TypeOrmModule.forFeature([UserRepository]),
+        ThrottlerModule.forRoot({
+            ttl: 60,
+            limit: 10,
+        }),
     ],
     providers: [AuthService, JwtStrategy],
     controllers: [AuthController],
