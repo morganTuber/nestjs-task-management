@@ -13,6 +13,6 @@ export class Task {
     @Column()
     public description: string
 
-    @Column({ enum: TaskStatus })
+    @Column({ enum: TaskStatus, default: TaskStatus.OPEN })
     public status: TaskStatus
 }

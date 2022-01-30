@@ -10,4 +10,7 @@ export class FilterTaskDto {
     @IsOptional()
     @IsEnum(TaskStatus)
     status?: TaskStatus
+
+    @IsOptional()
+    sort?: string
 }
