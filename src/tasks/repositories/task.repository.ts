@@ -27,7 +27,7 @@ export class TaskRepository extends Repository<Task> {
         const { query, status, sort } = filterTaskDto
         const taskQuery = this.createQueryBuilder('task')
         //query only the tasks belonging to the logged in user
-        taskQuery.andWhere('task.userId = :userId', { userId: user.id })
+        taskQuery.where({ user })
         if (sort) {
             taskQuery.orderBy(
                 `LOWER(${sort})`,
