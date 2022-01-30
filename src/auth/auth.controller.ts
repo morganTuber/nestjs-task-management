@@ -10,7 +10,7 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
     @Post('signup')
-    public signup(@Body() signupDto: SignUpDto): Promise<void> {
+    public signup(@Body() signupDto: SignUpDto): Promise<ISignedToken> {
         return this.authService.signup(signupDto)
     }
 

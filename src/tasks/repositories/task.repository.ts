@@ -1,23 +1,33 @@
 import { EntityRepository, Repository } from 'typeorm'
 
+import { User } from '../../auth/entities/user.entity'
 import { CreateTaskDto } from '../dtos/create-task.dto'
 import { FilterTaskDto } from '../dtos/filter-task.dto'
 import { Task } from '../entities/task.entity'
 
 @EntityRepository(Task)
 export class TaskRepository extends Repository<Task> {
-    public async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+    public async createTask(
+        user: User,
+        createTaskDto: CreateTaskDto,
+    ): Promise<Task> {
         const { title, description } = createTaskDto
         const task = this.create({
             title,
             description,
+            user,
         })
         await this.save(task)
         return task
     }
-    public async findAllTasks(filterTaskDto: FilterTaskDto): Promise<Task[]> {
+    public async findAllTasks(
+        user: User,
+        filterTaskDto: FilterTaskDto,
+    ): Promise<Task[]> {
         const { query, status, sort } = filterTaskDto
         const taskQuery = this.createQueryBuilder('task')
+        //query only the tasks belonging to the logged in user
+        taskQuery.andWhere('task.userId = :userId', { userId: user.id })
         if (sort) {
             taskQuery.orderBy(
                 `LOWER(${sort})`,
@@ -31,7 +41,7 @@ export class TaskRepository extends Repository<Task> {
         //if query is provided in request body filter by either title and description of task
         if (query) {
             taskQuery.andWhere(
-                'task.title ILIKE :query OR task.description ILIKE :query',
+                '(task.title ILIKE :query OR task.description ILIKE :query)',
                 { query: `%${query}%` },
             )
         }

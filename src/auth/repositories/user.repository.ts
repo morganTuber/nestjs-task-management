@@ -11,7 +11,7 @@ import { User } from '../entities/user.entity'
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-    public async createUser(createUserDto: SignUpDto): Promise<void> {
+    public async createUser(createUserDto: SignUpDto): Promise<User> {
         const { username, email, password, confirmPassword } = createUserDto
         //check whether the password and confirmPassword matches or not
         if (password !== confirmPassword)
@@ -23,6 +23,7 @@ export class UserRepository extends Repository<User> {
         })
         try {
             await this.save(user)
+            return user
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             // duplicate username or email
