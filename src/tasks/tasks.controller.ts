@@ -7,7 +7,11 @@ import {
     Patch,
     Post,
     Query,
+    Req,
+    UseGuards,
 } from '@nestjs/common'
+import { AuthGuard } from '@nestjs/passport'
+import { Request } from 'express'
 
 import { CreateTaskDto } from './dtos/create-task.dto'
 import { FilterTaskDto } from './dtos/filter-task.dto'
@@ -20,7 +24,12 @@ export class TasksController {
     constructor(private readonly tasksService: TasksService) {}
 
     @Get()
-    public findAll(@Query() filterTaskDto: FilterTaskDto): Promise<Task[]> {
+    @UseGuards(AuthGuard('jwt'))
+    public findAll(
+        @Req() req: Request,
+        @Query() filterTaskDto: FilterTaskDto,
+    ): Promise<Task[]> {
+        console.log(req)
         return this.tasksService.findAllTasks(filterTaskDto)
     }
 

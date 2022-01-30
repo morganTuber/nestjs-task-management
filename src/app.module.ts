@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
+import { AuthModule } from './auth/auth.module'
 import { TasksModule } from './tasks/tasks.module'
 
 @Module({
@@ -16,6 +17,7 @@ import { TasksModule } from './tasks/tasks.module'
             synchronize: true,
         }),
         TasksModule,
+        AuthModule,
     ],
 })
 export class AppModule {}
